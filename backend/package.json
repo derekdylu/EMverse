@@ -6,6 +6,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.3",
+    "graphql-yoga": "^1.18.3",
     "nodemon": "^2.0.15"
   },
   "devDependencies": {
@@ -18,9 +19,8 @@
     "@babel/preset-env": "^7.16.11",
     "dotenv-defaults": "^5.0.0",
     "mongoose": "^6.2.3"
-  }
-  ,
+  },
   "scripts": {
-    "server": "nodemon ./src/server.js --ext js --exec babel-node"
+    "server": "nodemon src/index.js --ext js,graphql --exec babel-node"
   }
 }
