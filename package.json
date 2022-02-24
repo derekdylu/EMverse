@@ -1,0 +1,14 @@
+{
+  "name": "em-verse",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/derekdylu/em-verse.git",
+  "author": "derekdylu <derekdylu@gmail.com>",
+  "license": "MIT"
+  ,
+  "scripts": {
+    "install": "cd frontend && yarn install && cd ../backend && yarn install",
+    "frontend": "cd frontend && yarn start",
+    "server": "cd backend && yarn server"
+  }
+}
