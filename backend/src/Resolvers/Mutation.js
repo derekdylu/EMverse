@@ -9,6 +9,10 @@ const Mutation = {
         }).save();
 
         // subscription
+        pubsub.publish(`POST MUTATION FROM ${emotion}`, 
+            {
+                postSubscription: { mutation: 'CREATED', post: post },
+            });
 
         return post;
     },

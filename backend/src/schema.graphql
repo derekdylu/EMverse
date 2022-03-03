@@ -33,6 +33,11 @@ type Mutation {
   updatePost(id: ID!): ID! # only update visibility
 }
 
-# type Subscription {
-#     # TODO: Subscription for new posts and emotions counts
-# }
+type postSubscriptionPayload {
+  mutation: MutationType!
+  post: Post!
+}
+
+type Subscription {
+  postSubscription(emotion: Emotion!): postSubscriptionPayload!
+}

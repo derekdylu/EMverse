@@ -5,8 +5,10 @@ export const CREATE_POST = gql`
     {
         createPost(emotion: $emotion, text: $text)
         {
+            created_at,
             emotion,
             text,
+            is_visible,
         },
     },
 `;
