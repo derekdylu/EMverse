@@ -1,0 +1,38 @@
+scalar Date
+
+enum MutationType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+enum Emotion {
+  HAHA
+  ANGRY
+  SAD
+  WOW
+  FEAR
+  DISGUST
+}
+
+type Post {
+  id: ID!
+  created_at: Date!
+  emotion: Emotion!
+  text: String!
+  is_visible: Boolean!
+}
+
+type Query {
+  postsByEmotion(emotion: Emotion!): [Post]!
+  emotionsCount: [Int!]!
+}
+
+type Mutation {
+  createPost(emotion: Emotion!, text: String!): Post!
+  updatePost(id: ID!): ID! # only update visibility
+}
+
+# type Subscription {
+#     # TODO: Subscription for new posts and emotions counts
+# }

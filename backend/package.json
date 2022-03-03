@@ -21,6 +21,6 @@
     "mongoose": "^6.2.3"
   },
   "scripts": {
-    "server": "nodemon src/index.js --ext js,graphql --exec babel-node"
+    "server": "nodemon src/server.js --ext js,graphql --exec babel-node"
   }
 }

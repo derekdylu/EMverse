@@ -1,0 +1,22 @@
+import { gql } from '@apollo/client';
+
+export const CREATE_POST = gql`
+    mutation Create_Post ($emotion: Emotion!, $text: String!)
+    {
+        createPost(emotion: $emotion, text: $text)
+        {
+            emotion,
+            text,
+        },
+    },
+`;
+
+export const UPDATE_POST = gql`
+    mutation Update_Post ($id: ID!)
+    {
+        updatePost(id: $id)
+        {
+            id,
+        },
+    },
+`;
