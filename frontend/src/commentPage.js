@@ -5,6 +5,11 @@ import Lottie from 'react-lottie-player';
 import animationData from './anim.json'
 import './commentPage.css'
 
+import { POST_BY_EMOTION,
+         EMOTIONS_COUNT }
+        from './graphql';
+import { useQuery, useMutation } from '@apollo/client';
+
 /*
     TODO:
     [DONE] click anywhere except knob to play/pause
@@ -15,9 +20,19 @@ import './commentPage.css'
     [] (probably) update window size if resize
 */
 
+const emotionToIdx = {
+    "HAHA": 0,
+    "ANGRY": 1,
+    "SAD": 2,
+    "WOW": 3,
+    "FEAR": 4,
+    "DISGUST": 5,
+}
+
 export default function CommentPage() {
-    const { emotion } = useParams();
-    const totalComment = 10;
+    const { _emotion } = useParams();
+    const [totalComment, setTotalComment] = useState(2);
+    const [currentComment, setCurrentComment] = useState("");
 
     // state variables
     const [play, setPlay] = useState(true);
@@ -34,6 +49,27 @@ export default function CommentPage() {
         // left: '50%',
         // transform: 'translate(-50%, -50%)'
     }
+
+    // database data
+    const { data: posts } = useQuery(POST_BY_EMOTION, {
+        variables: { emotion: _emotion }
+    })
+
+    useEffect (() => {
+        if (posts !== undefined) {
+            console.log(posts.postsByEmotion[0].text);
+            setTotalComment(posts.postsByEmotion.length);
+        }
+    }, [posts]);
+
+    const { data: emotionsCount } = useQuery(EMOTIONS_COUNT);
+
+    useEffect (() => {
+        if (emotionsCount !== undefined) {
+            console.log(emotionsCount.emotionsCount);
+            console.log(typeof(_emotion));
+    }
+    }, [emotionsCount])
     
     function pauseAnim(e) {
         if (!(e.target.className).includes("donut")) {
@@ -46,13 +82,6 @@ export default function CommentPage() {
 
     function playAnim(e) {
         setPlay(true);
-
-        // if (!(e.target.className).includes("donut")) {
-        //     setPlay(true);
-        // } 
-        // if (seek === true) {
-        //     setPlay(true);
-        // }
     }
 
     function enterFrame() {
@@ -84,6 +113,7 @@ export default function CommentPage() {
         else {
             if (frameCount === 40) {
                 box.style.color = "black";
+                setCurrentComment(posts.postsByEmotion[loopCount].text)
             }
             if (frameCount === 230) {
                 box.style.color = "transparent";
@@ -93,7 +123,7 @@ export default function CommentPage() {
 
     return (
         <div className="fullPage" onMouseDown={(e) => pauseAnim(e)} onMouseUp={(e) => playAnim(e)}>
-            {/* {emotion} */}
+            {_emotion}
             <Lottie
                 style={style}
                 loop
@@ -109,7 +139,7 @@ export default function CommentPage() {
             <Donut
                 diameter={200}
                 min={0}
-                max={9}
+                max={totalComment - 1   }
                 step={1}
                 value={loopCount}
                 theme={{
@@ -117,7 +147,7 @@ export default function CommentPage() {
                 }}
                 onValueChange={(value) => setLoopCount(value)}
             />
-            <h2 id="box" style={{color: "transparent"}}>Hi</h2>
+            <h2 id="box" style={{color: "transparent"}}>{currentComment}</h2>
         </div>
     )
 }
