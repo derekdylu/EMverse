@@ -5,7 +5,6 @@ export const POST_BY_EMOTION = gql`
     {
         postsByEmotion (emotion: $emotion)
         {
-            created_at,
             emotion,
             text,
             is_visible,
