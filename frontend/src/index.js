@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import Home from './Containers/Home'
 import reportWebVitals from './reportWebVitals';
 import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink, split } from '@apollo/client';
 // import { split } from 'apollo-link';
@@ -43,7 +44,7 @@ ReactDOM.render(
   
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <App />
+      <Home />
     </ApolloProvider>
   </React.StrictMode>
   ,document.getElementById('root')

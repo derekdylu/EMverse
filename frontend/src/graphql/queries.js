@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const POST_BY_EMOTION = gql`
-    query postsByEmotion($emotion: String!)
+    query postsByEmotion($emotion: Emotion!)
     {
         postsByEmotion (emotion: $emotion)
         {
@@ -14,7 +14,7 @@ export const POST_BY_EMOTION = gql`
 `;
 
 export const EMOTIONS_COUNT = gql`
-    mutation Emotions_Count ()
+    query Emotions_Count
     {
         emotionsCount
     },

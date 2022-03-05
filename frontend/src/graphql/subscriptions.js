@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const POSTSUBSCRIPTION = gql`
+export const POST_SUBSCRIPTION = gql`
     subscription PostSubscription ($emotion: String!)
     {
         postSubscription(emotion: $emotion)
