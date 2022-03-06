@@ -1,4 +1,4 @@
-import './inputPage.css';
+import './InputPage.css';
 import { React, useState, useEffect } from 'react';
 
 import { CREATE_POST,
