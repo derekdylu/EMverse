@@ -7,7 +7,7 @@ import './commentPage.css'
 
 import { POST_BY_EMOTION,
          EMOTIONS_COUNT }
-        from './graphql';
+        from '../graphql';
 import { useQuery, useMutation } from '@apollo/client';
 import { selectionSetMatchesResult } from '@apollo/client/cache/inmemory/helpers';
 
@@ -62,7 +62,7 @@ export default function CommentPage() {
     const [skip, setSkip] = useState(false);
 
     const style = {
-        height: '50%',
+        height: '0%',
         // height: 150,
         // position: 'absolute',
         // top: '50%',
@@ -168,7 +168,9 @@ export default function CommentPage() {
                 onEnterFrame={() => enterFrame()}
                 onLoopComplete={() => loopComplete()}
             />
-            <h2 id="box" style={{color: "transparent"}}>{currentComment}</h2>
+            <div className="test">
+                <h2 id="box" style={{color: "transparent"}}>{currentComment}</h2>
+            </div>
             {/* {frameCount} */}
             {/* {loopCount} */}
             <div className="donut">
