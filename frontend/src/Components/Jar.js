@@ -12,12 +12,13 @@ import {
     Events,
 } from 'matter-js';
 
-// TODO: mount matters
-// TODO: mount P5
-// TODO: scale
-// TODO: bounce and breath
-// TODO: transition
-// TODO: UI finish
+// DONE: mount matters
+// DONE: mount P5
+// DONE: scale
+// TODO: bounce and breath?
+// TODO: LOGO and Button
+// TODO: transition and reouter
+// DONE: UI finish
 
 const Jar = ({ emotionsCount }) => {
     let counts = [];
@@ -93,7 +94,6 @@ const Jar = ({ emotionsCount }) => {
 
         World.add(engine.current.world, circles);
 
-        // CHECK what is this?
         const runner = Runner.create({
             isFixed: true
         });
@@ -106,7 +106,7 @@ const Jar = ({ emotionsCount }) => {
         p5.createCanvas(p5.windowWidth, p5.windowHeight);
         p5.background(100);
 
-        // BUG can't load pubic image ???
+        // BUG can't load images in public folder ???
         haha = p5.createImg("../haha.gif");
         angry = p5.createImg("../angry.gif");
         sad = p5.createImg("../sad.gif");
@@ -127,8 +127,6 @@ const Jar = ({ emotionsCount }) => {
     const draw = (p5) => {
         p5.background(255);
 
-        // TODO go outside will back
-
         p5.noStroke();
         for(let ele of walls){
             p5.beginShape();
@@ -140,7 +138,6 @@ const Jar = ({ emotionsCount }) => {
             p5.endShape();
         }
 
-        // TODO ele -> walls
         for(let ele of circles) {
 
             p5.beginShape();
@@ -180,7 +177,7 @@ const Jar = ({ emotionsCount }) => {
             }
         }
 
-        // CHECK change to relative position
+        // DONE change to relative position
         p5.push();
         
             p5.fill(0, 0);
