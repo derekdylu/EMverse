@@ -3,4 +3,16 @@
     height: 100%;
     position: absolute;
     overflow: hidden;
+    text-align: center;
+    /* display:flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center */
+}
+
+.donut {
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center
 }

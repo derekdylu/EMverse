@@ -9,6 +9,7 @@ import { POST_BY_EMOTION,
          EMOTIONS_COUNT }
         from './graphql';
 import { useQuery, useMutation } from '@apollo/client';
+import { selectionSetMatchesResult } from '@apollo/client/cache/inmemory/helpers';
 
 /*
     TODO:
@@ -29,6 +30,19 @@ const emotionToIdx = {
     "DISGUST": 5,
 }
 
+// const comments = [
+//     "haha0",
+//     "haha1",
+//     "haha2",
+//     "haha3",
+//     "haha4",
+//     "haha5",
+//     "haha6",
+//     "haha7",
+//     "haha8",
+//     "haha9"
+// ]
+
 export default function CommentPage() {
     const { _emotion } = useParams();
     const [totalComment, setTotalComment] = useState(2);
@@ -36,19 +50,27 @@ export default function CommentPage() {
 
     // state variables
     const [play, setPlay] = useState(true);
+    const [direction, setDirection] = useState(1);
     const [frameCount, setFrameCount] = useState(1);
     const [loopCount, setLoopCount] = useState(0);
     const [speed, setSpeed] = useState(1);
-    const [seek, setSeek] = useState(false);
+    const [seek, setSeek] = useState({
+        set: false,
+        startLoop: 0,
+        totalInc: 0
+    });
+    const [skip, setSkip] = useState(false);
 
     const style = {
-        width: 150,
-        height: 150,
+        height: '50%',
+        // height: 150,
         // position: 'absolute',
         // top: '50%',
         // left: '50%',
         // transform: 'translate(-50%, -50%)'
     }
+
+    const box = document.getElementById("box");
 
     // database data
     const { data: posts } = useQuery(POST_BY_EMOTION, {
@@ -69,14 +91,13 @@ export default function CommentPage() {
             console.log(emotionsCount.emotionsCount);
             console.log(typeof(_emotion));
     }
-    }, [emotionsCount])
+    }, [emotionsCount, _emotion])
     
     function pauseAnim(e) {
-        if (!(e.target.className).includes("donut")) {
-            setPlay(false);          
-        } else {
-            setPlay(false);        
-            setSeek(true);
+        setPlay(false); 
+
+        if ((e.target.className).includes("donut")) {
+            setSeek({set: true, startLoop: loopCount});
         }
     }
 
@@ -86,68 +107,83 @@ export default function CommentPage() {
 
     function enterFrame() {
         setFrameCount(frameCount + 1);
-        if (seek === true) {
-            setSpeed(2);
-            setSeek(false);
-        }
-    }
-    
-    function loopComplete() {
-        if (speed === 2) {
-            setSpeed(1);
-        }
-        else {
-            setLoopCount((loopCount + 1) % (totalComment));
-        }
 
-        console.log(frameCount);
-        setFrameCount(0);
-    }
-
-    useEffect(() => {
-        const box = document.getElementById("box");
-
-        if (speed === 2) {
+        if (seek.set === true) {
+            console.log(seek);
+            setSpeed(3);
+            setSeek({...seek, set: false, totalInc: (Math.abs(loopCount - seek.startLoop) - 1)});
+            if (loopCount < seek.startLoop) {
+                setDirection(-1);
+            }
             box.style.color = "transparent";
         }
-        else {
+
+        if (speed === 1) {
             if (frameCount === 40) {
                 box.style.color = "black";
                 setCurrentComment(posts.postsByEmotion[loopCount].text)
+                // setCurrentComment(comments[loopCount]);
             }
             if (frameCount === 230) {
                 box.style.color = "transparent";
             }
         }
-    });
+    }
+    
+    function loopComplete() {
+        if (speed === 3) {
+            setSeek({...seek, totalInc: seek.totalInc - 1});
+
+            if (seek.totalInc === 0) {
+                setSpeed(1);
+                if (direction === -1) {
+                    setDirection(1);
+                    setSkip(true);
+                }
+            }
+        }
+        
+        else {
+            if (skip) {
+                setSkip(false);
+            }
+            else {
+                setLoopCount((loopCount + 1) % (totalComment));
+            }
+        }
+
+        setFrameCount(0);
+    }
 
     return (
         <div className="fullPage" onMouseDown={(e) => pauseAnim(e)} onMouseUp={(e) => playAnim(e)}>
-            {_emotion}
+            {/* {_emotion} */}
             <Lottie
                 style={style}
-                loop
                 play={play}
+                direction={direction}
                 animationData={animationData}
                 speed={speed}
                 // event
                 onEnterFrame={() => enterFrame()}
                 onLoopComplete={() => loopComplete()}
             />
+            <h2 id="box" style={{color: "transparent"}}>{currentComment}</h2>
             {/* {frameCount} */}
             {/* {loopCount} */}
-            <Donut
-                diameter={200}
-                min={0}
-                max={totalComment - 1   }
-                step={1}
-                value={loopCount}
-                theme={{
-                    donutColor: 'blue'
-                }}
-                onValueChange={(value) => setLoopCount(value)}
-            />
-            <h2 id="box" style={{color: "transparent"}}>{currentComment}</h2>
+            <div className="donut">
+                <Donut
+                    diameter={200}
+                    min={0}
+                    max={totalComment - 1}
+                    step={1}
+                    value={loopCount}
+                    theme={{
+                        donutColor: 'blue'
+                    }}
+                    onValueChange={(value) => setLoopCount(value)}
+                />
+            </div>
         </div>
     )
 }
