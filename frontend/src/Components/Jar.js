@@ -17,7 +17,8 @@ import {
 // DONE: scale
 // TODO: bounce and breath?
 // TODO: LOGO and Button
-// TODO: transition and reouter
+// TODO: router and transition animation
+// TODO: white reflection animation
 // DONE: UI finish
 
 const Jar = ({ emotionsCount }) => {
@@ -50,7 +51,7 @@ const Jar = ({ emotionsCount }) => {
             }
         });
 
-        // NOTE mouse constraint
+        // mouse constraint
         const mouse = Mouse.create(render.canvas.elt);
         const options = {
             mouse: mouse,
@@ -59,7 +60,7 @@ const Jar = ({ emotionsCount }) => {
         render.mouse = mouse;
         World.add(engine.current.world, mouseConstraint);
 
-        // NOTE Boundaries (WALL)
+        // boundaries (WALL)
         let ground = Bodies.rectangle(cw/2, ch+30, cw, 60, {
             isStatic: true
         });
@@ -78,7 +79,7 @@ const Jar = ({ emotionsCount }) => {
         walls.push(ceil);
         World.add(engine.current.world, walls);
 
-        // NOTE generate circles
+        // generate circles
         const sumCounts = counts.reduce(
             (a, b) => a + b, 0
         );
@@ -202,7 +203,7 @@ const Jar = ({ emotionsCount }) => {
             p5.textSize(36);
             p5.text('Lorem ipsum dolor sit amet, consectetur adipiscing elit?', 0.0217*cw + 15, 0.5122*ch-10, 0.2118*cw);
 
-            // TODO reflection white
+            // TODO reflections
             // p5.noStroke();
             // p5.fill(255, 80);
             // p5.rect(p5.map(p5.mouseX, 0, 1440, 500, 1270), 90, 100, 860);
