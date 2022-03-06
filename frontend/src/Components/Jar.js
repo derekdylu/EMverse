@@ -26,7 +26,6 @@ const Jar = ({ emotionsCount }) => {
         console.log(counts);
     }
 
-    //DIV: Matter part
     const scene = useRef();
     const engine = useRef(Engine.create());
     let mouseConstraint;
@@ -35,13 +34,10 @@ const Jar = ({ emotionsCount }) => {
 
     let haha;
     let sad, angry, disgust, fear, wow;
+    let { innerWidth: cw, innerHeight: ch } = window;
     
     useEffect (() => {
         
-        // CHECK here for window size code, cw? ch?
-        let { innerWidth: cw, innerHeight: ch } = window;
-        // cw = cw*widthRatio;
-        // ch = ch*heightRatio;
         const render = Render.create({
             element: scene.current,
             engine: engine.current,
@@ -57,33 +53,25 @@ const Jar = ({ emotionsCount }) => {
         const mouse = Mouse.create(render.canvas.elt);
         const options = {
             mouse: mouse,
-            constraint: {
-                // stiffness: 0.5,
-                // render: {visible: false}
-            }
         };
         mouseConstraint = MouseConstraint.create(engine.current, options);
         render.mouse = mouse;
         World.add(engine.current.world, mouseConstraint);
-
-        // CHECK gravity?
-        // engine.current.gravity.scale = 0.001;
-        // engine.current.gravity.y = 0.1;
 
         // NOTE Boundaries (WALL)
         let ground = Bodies.rectangle(cw/2, ch+30, cw, 60, {
             isStatic: true
         });
         walls.push(ground);
-        let left = Bodies.rectangle(250, ch/2, 500, ch, {
+        let left = Bodies.rectangle(0.2678*cw/2, ch/2, 0.2678*cw, ch, {
             isStatic: true
         });
         walls.push(left);
-        let right = Bodies.rectangle(cw-30, ch/2, 100, ch, {
+        let right = Bodies.rectangle(cw-(0.0567*cw/2), ch/2, 0.0567*cw, ch, {
             isStatic: true
         });
         walls.push(right);
-        let ceil = Bodies.rectangle(cw/2, 0, cw, 180, {
+        let ceil = Bodies.rectangle(cw/2, 0.1656*ch/2, cw, 0.1656*ch, {
             isStatic: true
         });
         walls.push(ceil);
@@ -93,9 +81,8 @@ const Jar = ({ emotionsCount }) => {
         const sumCounts = counts.reduce(
             (a, b) => a + b, 0
         );
-        // const logSumCounts = Math.log10(sumCounts);
-        // const scale = Math.pow(100/sumCounts, 1/Math.E);
-        const scale = 600;
+        
+        const scale = 570 * ((cw-1440)/1440+1);
 
         generateCircle("haha", (counts[0] === 0) ? 1 : (counts[0] / sumCounts * scale), cw*2/3, ch/2);
         generateCircle("angry", (counts[1] === 0) ? 1 : (counts[1] / sumCounts * scale), cw*2/3, ch/2);
@@ -112,25 +99,7 @@ const Jar = ({ emotionsCount }) => {
         });
         Runner.run(runner, engine.current)
 
-        // Render.lookAt(render, {
-        //     min: { x: 0, y: 0 },
-        //     max: { x: cw, y: ch }
-        // });
-        // Render.run(render)
-
-        //  The returned function will be called when the element unmount
-        // return () => {
-        //     Render.stop(render);
-        //     World.clear(engine.current.world);
-        //     Engine.clear(engine.current);
-        //     render.canvas.remove();
-        //     render.canvas = null;
-        //     render.context = null;
-        //     render.textures = {};
-        // }
     }, []);
-
-    //DIV: P5 part    
 
     const setup = (p5, canvasParentRef) => {
         p5.frameRate(60);
@@ -148,7 +117,7 @@ const Jar = ({ emotionsCount }) => {
     }
     
     const generateCircle = (emotion, sz, ww, wh) => {
-        let cir = Bodies.circle(ww, wh, sz || 80, {restitution: 0.2});
+        let cir = Bodies.circle(ww, wh, sz || 80, { restitution: 0.3 });
         cir.emotion = emotion;
         cir.sz = sz;
         circles.push(cir);
@@ -158,15 +127,7 @@ const Jar = ({ emotionsCount }) => {
     const draw = (p5) => {
         p5.background(255);
 
-        // NOTE go outside will back
-        // elements.forEach(function (ele, i) {
-        // 	if (ele.position.x > width || ele.position.x < 0 || ele.position.y < 0 || ele.position.y > height) {
-        // 		let tmpEmo = ele.emotion;
-        // 		let tmpSize = ele.size;
-        // 		elements.splice(i, 1);
-        // 		generateCircle(tmpEmo, tmpSize);
-        // 	}
-        // })
+        // TODO go outside will back
 
         p5.noStroke();
         for(let ele of walls){
@@ -221,30 +182,33 @@ const Jar = ({ emotionsCount }) => {
 
         // CHECK change to relative position
         p5.push();
+        
             p5.fill(0, 0);
             p5.strokeWeight(7.5);
             p5.stroke("#FFB500");
-            p5.rect(-140, -380, 600, 600, 50);
-            p5.rect(1395, 350, 600, 600, 50);
+            p5.rect(-0.2375*cw, -0.3912*ch, 2*0.2375*cw, 2*0.3912*ch, 50);
+            p5.rect(0.9646*cw, 0.4145*ch, 2*0.0347*cw, 2*0.5854*ch, 50);
             
             p5.fill("#FFB500");
             p5.noStroke();
-            p5.rect(-140, 250, 600, 600, 50);
-            p5.rect(500, -530, 860, 600, 50);
-            p5.rect(1395, -275, 600, 600, 50);
-
-            p5.fill("#523915")
-            p5.textSize(20);
-            p5.text('今日議題', 48, 325);
-            p5.textSize(36);
-            p5.text('Lorem ipsum dolor sit amet, consectetur adipiscing elit mumbule text wrap no chinese?', 65, 345, 410);
+            p5.rect(-0.2375*cw, 0.4145*ch, 2*0.2375*cw, 2*0.5854*ch, 50);
+            p5.rect(0.2678*cw, -0.1369*ch, 0.6755*cw, 2*0.1369*ch, 50);
+            p5.rect(0.9646*cw, -0.3760*ch, 2*0.0347*cw, 2*0.3760*ch, 50);
 
             p5.stroke("#FFCB4C");
-            p5.line(50, 350, 50, 600);
+            p5.line(0.0217*cw, 0.5122*ch, 0.0217*cw, 0.7857*ch);
 
             p5.noStroke();
-            p5.fill(255, 80);
-            p5.rect(p5.map(p5.mouseX, 0, 1440, 500, 1270), 90, 100, 860);
+            p5.fill("#523915")
+            p5.textSize(20);
+            p5.text('Today\'s Topic', 0.0217*cw - 5, 0.5122*ch - 20);
+            p5.textSize(36);
+            p5.text('Lorem ipsum dolor sit amet, consectetur adipiscing elit?', 0.0217*cw + 15, 0.5122*ch-10, 0.2118*cw);
+
+            // TODO reflection white
+            // p5.noStroke();
+            // p5.fill(255, 80);
+            // p5.rect(p5.map(p5.mouseX, 0, 1440, 500, 1270), 90, 100, 860);
         p5.pop();
     }
 
@@ -264,23 +228,6 @@ const Jar = ({ emotionsCount }) => {
                 return "#318859";
         }
     }
-    
-    // function easeOutBounce(x) {
-    //     const n1 = 7.5625;
-    //     const d1 = 2.75;
-        
-    //     if (x < 1 / d1) {
-    //         return n1 * x * x;
-    //     } else if (x < 2 / d1) {
-    //         return n1 * (x -= 1.5 / d1) * x + 0.75;
-    //     } else if (x < 2.5 / d1) {
-    //         return n1 * (x -= 2.25 / d1) * x + 0.9375;
-    //     } else {
-    //         return n1 * (x -= 2.625 / d1) * x + 0.984375;
-    //     }
-    // }
-
-    
       
     return <Sketch setup={setup} draw={draw} />
 }
