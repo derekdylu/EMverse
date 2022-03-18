@@ -1,31 +1,32 @@
-import { React, useRef, useState, useEffect } from 'react'
+import { React, useRef, useState, useEffect, } from 'react'
 import Sketch from 'react-p5'
-import { 
-    Mouse, 
-    Engine, 
-    Render, 
-    Bodies, 
-    World, 
-    Runner, 
-    MouseConstraint, 
-    Body, 
-    Events,
-} from 'matter-js';
+import { Mouse, Engine, Render, Bodies, World, Runner, MouseConstraint, Body, } from 'matter-js';
+const emotionsList = "haha-angry-sad-wow-fear-disgust".split("-");
 
-// DONE: mount matters
-// DONE: mount P5
-// DONE: scale
-// TODO: bounce and breath?
-// TODO: LOGO and Button
+// DONE: mount matters and P5
+// DONE: RWD UI
+// DONE: outline
+// DONE: breath
+// TODO: Button
 // TODO: router and transition animation
-// TODO: white reflection animation
-// DONE: UI finish
+// BUG: outline not full
+// BUG: assets
 
 const Jar = ({ emotionsCount }) => {
     let counts = [];
+    let minIdx = -1;
     if(emotionsCount !== undefined){
         counts = emotionsCount.emotionsCount;
         console.log(counts);
+
+        let min;
+        for (let i = 0; i < counts.length; i++){
+            if (min === undefined || counts[i] < min){
+                min = counts[i];
+                minIdx = i;
+            }
+        }
+        console.log(emotionsList[minIdx]);
     }
 
     const scene = useRef();
@@ -34,9 +35,12 @@ const Jar = ({ emotionsCount }) => {
     const circles = [];
     const walls = [];
 
-    let haha;
-    let sad, angry, disgust, fear, wow;
+    let haha, sad, angry, disgust, fear, wow;
     let { innerWidth: cw, innerHeight: ch } = window;
+
+    let cnv;
+    let mx, my;
+    let sec = 0;
     
     useEffect (() => {
         
@@ -84,7 +88,7 @@ const Jar = ({ emotionsCount }) => {
             (a, b) => a + b, 0
         );
         
-        const scale = 570 * ((cw-1440)/1440+1);
+        const scale = 600 * ((cw-1440)/1440+1);
 
         generateCircle("haha", (counts[0] === 0) ? 1 : (counts[0] / sumCounts * scale), cw*2/3, ch/2);
         generateCircle("angry", (counts[1] === 0) ? 1 : (counts[1] / sumCounts * scale), cw*2/3, ch/2);
@@ -102,12 +106,12 @@ const Jar = ({ emotionsCount }) => {
 
     }, []);
 
-    const setup = (p5, canvasParentRef) => {
-        p5.frameRate(60);
-        p5.createCanvas(p5.windowWidth, p5.windowHeight);
+    const setup = (p5) => {
+        p5.frameRate(30);
+        cnv = p5.createCanvas(p5.windowWidth, p5.windowHeight);
         p5.background(100);
+        cnv.mouseClicked(circleClicked);
 
-        // BUG can't load images in public folder ???
         haha = p5.createImg("../haha.gif");
         angry = p5.createImg("../angry.gif");
         sad = p5.createImg("../sad.gif");
@@ -121,12 +125,15 @@ const Jar = ({ emotionsCount }) => {
         let cir = Bodies.circle(ww, wh, sz || 80, { restitution: 0.3 });
         cir.emotion = emotion;
         cir.sz = sz;
+        cir.clicked = false;
         circles.push(cir);
         console.log(cir);
     }
       
     const draw = (p5) => {
         p5.background(255);
+        mx = p5.mouseX;
+        my = p5.mouseY;
 
         p5.noStroke();
         for(let ele of walls){
@@ -139,11 +146,25 @@ const Jar = ({ emotionsCount }) => {
             p5.endShape();
         }
 
+        // call breath animation
+        sec === 60 ? sec = 0 : sec++;
+        if (sec < 30){
+            Body.scale(circles[minIdx], 1.004, 1.004);
+        } else {
+            Body.scale(circles[minIdx], 0.996, 0.996);
+        }
+        
+
         for(let ele of circles) {
 
             p5.beginShape();
+            if (ele.clicked){
+                p5.stroke("#FFB500");
+                p5.strokeWeight(4);
+            } else {
+                p5.noStroke();
+            }
             p5.fill(emotionColor(ele.emotion) || 255);
-
             for(let vert of ele.vertices){
                 p5.vertex(vert.x, vert.y);
             }
@@ -200,13 +221,12 @@ const Jar = ({ emotionsCount }) => {
             p5.fill("#523915")
             p5.textSize(20);
             p5.text('Today\'s Topic', 0.0217*cw - 5, 0.5122*ch - 20);
+            p5.fill("#FFB500")
+            p5.text('Double click to see comments', 0.5301*cw, 0.2023*ch);
+            p5.fill("#523915")
             p5.textSize(36);
             p5.text('Lorem ipsum dolor sit amet, consectetur adipiscing elit?', 0.0217*cw + 15, 0.5122*ch-10, 0.2118*cw);
 
-            // TODO reflections
-            // p5.noStroke();
-            // p5.fill(255, 80);
-            // p5.rect(p5.map(p5.mouseX, 0, 1440, 500, 1270), 90, 100, 860);
         p5.pop();
     }
 
@@ -224,6 +244,43 @@ const Jar = ({ emotionsCount }) => {
                 return "#A67CC3";
             case 'disgust':
                 return "#318859";
+        }
+    }
+
+    const clearClicked = (ele) => {
+        if (ele){
+            ele.clicked = false;
+        } else {
+            for (let ele of circles) {
+                ele.clicked = false;
+            }
+        }
+    }
+
+    const clearClickedTimer = async (ele) => {
+        console.log("timer", ele);
+        setTimeout(clearClicked(ele), 10000);
+    }
+
+    const circleClicked = () => {
+        let outsideClicked = true;
+
+        for (let ele of circles){
+            if (Math.hypot(mx - ele.position.x, my - ele.position.y) < ele.circleRadius){
+                outsideClicked = false;
+                clearClickedTimer(ele);
+                if (ele.clicked){
+                   console.log(ele.emotion, " double clicked!")
+                }else{
+                    console.log(ele.emotion, " clicked")
+                    clearClicked()
+                    ele.clicked = true;
+                }
+            }
+        }
+        
+        if (outsideClicked){
+            clearClicked();
         }
     }
       
