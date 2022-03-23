@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import Home from './Containers/Home'
 import reportWebVitals from './reportWebVitals';
+import styled from 'styled-components';
+import { ThemeProvider } from "styled-components";
+import theme from './Themes/Theme';
 import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink, split } from '@apollo/client';
 // import { split } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
@@ -44,7 +46,9 @@ ReactDOM.render(
   
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <App />
+		<ThemeProvider theme={theme}>
+    	  <App />
+		</ThemeProvider>
     </ApolloProvider>
   </React.StrictMode>
   ,document.getElementById('root')

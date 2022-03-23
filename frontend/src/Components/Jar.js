@@ -13,6 +13,13 @@ const emotionsList = "haha-angry-sad-wow-fear-disgust".split("-");
 // BUG: assets
 
 const Jar = ({ emotionsCount }) => {
+    const [menu, setMenu] = useState(false);
+
+    const handleMenu = () => {
+        // console.log("handlemenu");
+        setMenu(true);
+    }
+
     let counts = [];
     let minIdx = -1;
     if(emotionsCount !== undefined){
@@ -41,6 +48,7 @@ const Jar = ({ emotionsCount }) => {
     let cnv;
     let mx, my;
     let sec = 0;
+    let openMenu;
     
     useEffect (() => {
         
@@ -90,12 +98,9 @@ const Jar = ({ emotionsCount }) => {
         
         const scale = 600 * ((cw-1440)/1440+1);
 
-        generateCircle("haha", (counts[0] === 0) ? 1 : (counts[0] / sumCounts * scale), cw*2/3, ch/2);
-        generateCircle("angry", (counts[1] === 0) ? 1 : (counts[1] / sumCounts * scale), cw*2/3, ch/2);
-        generateCircle("sad", (counts[2] === 0) ? 1 : (counts[2] / sumCounts * scale), cw*2/3, ch/2);
-        generateCircle("wow", (counts[3] === 0) ? 1 : (counts[3] / sumCounts * scale), cw*2/3, ch/2);
-        generateCircle("fear", (counts[4] === 0) ? 1 : (counts[4] / sumCounts * scale), cw*2/3, ch/2);
-        generateCircle("disgust", (counts[5] === 0) ? 1 : (counts[5] / sumCounts * scale), cw*2/3, ch/2);
+        for (let i = 0; i < 6; i++) {
+            generateCircle(emotionsList[i], (counts[i] === 0) ? 1 : (counts[i] / sumCounts * scale), cw*2/3, ch/2);
+        }
 
         World.add(engine.current.world, circles);
 
@@ -110,14 +115,14 @@ const Jar = ({ emotionsCount }) => {
         p5.frameRate(30);
         cnv = p5.createCanvas(p5.windowWidth, p5.windowHeight);
         p5.background(100);
-        cnv.mouseClicked(circleClicked);
+        cnv.mouseClicked(mouseHasClicked);
 
         haha = p5.createImg("../haha.gif");
         angry = p5.createImg("../angry.gif");
         sad = p5.createImg("../sad.gif");
         wow = p5.createImg("../wow.gif");
-        fear = p5.createImg("../cheer_up.gif");
-        disgust = p5.createImg("../thinking.gif");
+        fear = p5.createImg("../fear.gif");
+        disgust = p5.createImg("../disgust.gif");
 
     }
     
@@ -160,10 +165,26 @@ const Jar = ({ emotionsCount }) => {
             p5.beginShape();
             if (ele.clicked){
                 p5.stroke("#FFB500");
-                p5.strokeWeight(4);
+                p5.strokeWeight(3.5);
             } else {
                 p5.noStroke();
             }
+
+            // if (ele.clicked){
+            //     p5.push();
+            //     p5.fill(emotionColor(ele.emotion) || 255);
+            //     for(let vert of ele.vertices){
+            //         p5.vertex(vert.x, vert.y);
+            //     }
+            //     p5.filter(p5.BLUR, 6)
+            //     p5.pop();
+            // }
+
+            p5.fill(emotionColor(ele.emotion) || 255);
+            for(let vert of ele.vertices){
+                p5.vertex(vert.x, vert.y);
+            }
+
             p5.fill(emotionColor(ele.emotion) || 255);
             for(let vert of ele.vertices){
                 p5.vertex(vert.x, vert.y);
@@ -213,6 +234,8 @@ const Jar = ({ emotionsCount }) => {
             p5.rect(-0.2375*cw, 0.4145*ch, 2*0.2375*cw, 2*0.5854*ch, 50);
             p5.rect(0.2678*cw, -0.1369*ch, 0.6755*cw, 2*0.1369*ch, 50);
             p5.rect(0.9646*cw, -0.3760*ch, 2*0.0347*cw, 2*0.3760*ch, 50);
+            p5.fill("#ffffff");
+            openMenu = p5.rect(0.0245*cw, 0.8827*ch, 0.1853*cw, 0.0662*ch, 50);
 
             p5.stroke("#FFCB4C");
             p5.line(0.0217*cw, 0.5122*ch, 0.0217*cw, 0.7857*ch);
@@ -248,6 +271,7 @@ const Jar = ({ emotionsCount }) => {
     }
 
     const clearClicked = (ele) => {
+        console.log("clear all")
         if (ele){
             ele.clicked = false;
         } else {
@@ -258,19 +282,21 @@ const Jar = ({ emotionsCount }) => {
     }
 
     const clearClickedTimer = async (ele) => {
-        console.log("timer", ele);
-        setTimeout(clearClicked(ele), 10000);
+        console.log("timer start");
+        setTimeout(clearClicked(ele), 5000);
     }
 
-    const circleClicked = () => {
+    const mouseHasClicked = () => {
         let outsideClicked = true;
+
+        // if (Math.hypot(mx - ele.position.x, my - ele.position.y) < ele.circleRadius)
 
         for (let ele of circles){
             if (Math.hypot(mx - ele.position.x, my - ele.position.y) < ele.circleRadius){
                 outsideClicked = false;
-                clearClickedTimer(ele);
-                if (ele.clicked){
-                   console.log(ele.emotion, " double clicked!")
+                // clearClickedTimer(ele);
+                if (ele.clicked === true){
+                    console.log(ele.emotion, " double clicked!")
                 }else{
                     console.log(ele.emotion, " clicked")
                     clearClicked()
