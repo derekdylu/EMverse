@@ -2,7 +2,7 @@ import { React, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Donut } from 'react-dial-knob'
 import Lottie from 'react-lottie-player';
-import animationData from './anim.json'
+import animationData from './happy.json'
 import './commentPage.css'
 
 import { POST_BY_EMOTION,
@@ -20,6 +20,13 @@ import { selectionSetMatchesResult } from '@apollo/client/cache/inmemory/helpers
     [] (probably) add loading animation while loading data
     [] (probably) update window size if resize
 */
+
+import {
+	CircularInput,
+	CircularTrack,
+	CircularProgress,
+	CircularThumb
+} from 'react-circular-input'
 
 const emotionToIdx = {
     "HAHA": 0,
@@ -46,7 +53,7 @@ const emotionToIdx = {
 export default function CommentPage() {
     const { _emotion } = useParams();
     const [totalComment, setTotalComment] = useState(2);
-    const [currentComment, setCurrentComment] = useState("");
+    const [currentComment, setCurrentComment] = useState("test");
 
     // state variables
     const [play, setPlay] = useState(true);
@@ -61,13 +68,16 @@ export default function CommentPage() {
     });
     const [skip, setSkip] = useState(false);
 
+    const [value, setValue] = useState(0.25)
+
     const style = {
-        height: '0%',
+        height: '100%',
+        width: '150%',
         // height: 150,
-        // position: 'absolute',
+        position: 'absolute',
         // top: '50%',
-        // left: '50%',
-        // transform: 'translate(-50%, -50%)'
+        left: '50%',
+        transform: 'translate(-50%, 0%)'
     }
 
     const box = document.getElementById("box");
@@ -119,13 +129,16 @@ export default function CommentPage() {
         }
 
         if (speed === 1) {
-            if (frameCount === 40) {
-                box.style.color = "black";
+            if (frameCount === 40 || frameCount === 320) {
+                box.style.color = "white";
                 setCurrentComment(posts.postsByEmotion[loopCount].text)
                 // setCurrentComment(comments[loopCount]);
             }
-            if (frameCount === 230) {
+            if (frameCount === 200 || frameCount === 480) {
                 box.style.color = "transparent";
+            }
+            if (frameCount === 270) {
+                setLoopCount((loopCount + 1) % (totalComment));
             }
         }
     }
@@ -169,7 +182,7 @@ export default function CommentPage() {
                 onLoopComplete={() => loopComplete()}
             />
             <div className="test">
-                <h2 id="box" style={{color: "transparent"}}>{currentComment}</h2>
+                <p id="box" style={{color: "transparent"}}>{currentComment}</p>
             </div>
             {/* {frameCount} */}
             {/* {loopCount} */}
@@ -185,6 +198,11 @@ export default function CommentPage() {
                     }}
                     onValueChange={(value) => setLoopCount(value)}
                 />
+                {/* <CircularInput value={loopCount} onChange={setLoopCount}>
+                    <CircularTrack />
+                    <CircularProgress />
+                    <CircularThumb />
+                </CircularInput> */}
             </div>
         </div>
     )
