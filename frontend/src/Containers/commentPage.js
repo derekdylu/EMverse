@@ -1,8 +1,9 @@
 import { React, useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Donut } from 'react-dial-knob'
 import Lottie from 'react-lottie-player';
 import animationData from './happy.json'
+import homeButton from './home_button.png'
 import './commentPage.css'
 
 import { POST_BY_EMOTION,
@@ -228,6 +229,9 @@ export default function CommentPage() {
                     <CircularProgress stroke={`rgb(0, 0, 0)`} />
                 </CircularInput> */}
             </div>
+            <Link to="/">
+				<button class="home_button"><img src={homeButton} alt="H" /></button>
+			</Link>
         </div>
     )
 }
