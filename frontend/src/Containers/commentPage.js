@@ -9,7 +9,8 @@ import { POST_BY_EMOTION,
          EMOTIONS_COUNT }
         from '../graphql';
 import { useQuery, useMutation } from '@apollo/client';
-import { selectionSetMatchesResult } from '@apollo/client/cache/inmemory/helpers';
+
+import CircularSlider from '@fseehawer/react-circular-slider';
 
 /*
     TODO:
@@ -70,14 +71,17 @@ export default function CommentPage() {
 
     const [value, setValue] = useState(0.25)
 
+    const stepValue = value => Math.round(value * totalComment)
+
     const style = {
-        height: '100%',
+        height: '95%',
         width: '150%',
         // height: 150,
         position: 'absolute',
         // top: '50%',
         left: '50%',
-        transform: 'translate(-50%, 0%)'
+        transform: 'translate(-50%, 0%)',
+        // backgroundColor: 'black'
     }
 
     const box = document.getElementById("box");
@@ -106,6 +110,8 @@ export default function CommentPage() {
     function pauseAnim(e) {
         setPlay(false); 
 
+        console.log(e.target.className);
+
         if ((e.target.className).includes("donut")) {
             setSeek({set: true, startLoop: loopCount});
         }
@@ -129,15 +135,15 @@ export default function CommentPage() {
         }
 
         if (speed === 1) {
-            if (frameCount === 40 || frameCount === 320) {
+            if (frameCount === 50 || frameCount === 325) {
                 box.style.color = "white";
                 setCurrentComment(posts.postsByEmotion[loopCount].text)
                 // setCurrentComment(comments[loopCount]);
             }
-            if (frameCount === 200 || frameCount === 480) {
+            if (frameCount === 210 || frameCount === 485) {
                 box.style.color = "transparent";
             }
-            if (frameCount === 270) {
+            if (frameCount === 260) {
                 setLoopCount((loopCount + 1) % (totalComment));
             }
         }
@@ -184,24 +190,42 @@ export default function CommentPage() {
             <div className="test">
                 <p id="box" style={{color: "transparent"}}>{currentComment}</p>
             </div>
-            {/* {frameCount} */}
+            {frameCount}
             {/* {loopCount} */}
             <div className="donut">
                 <Donut
-                    diameter={200}
+                    diameter={100}
                     min={0}
                     max={totalComment - 1}
                     step={1}
                     value={loopCount}
                     theme={{
-                        donutColor: 'blue'
-                    }}
+                        donutColor: 'white',
+                        donutThickness: 10,
+                        centerFocusedColor: '#FB5544',
+                        centerColor: '#FB5544',
+                        bgrColor: '#FF998F',
+                        maxedBgrColor: '#FF998F'
+                }}
                     onValueChange={(value) => setLoopCount(value)}
                 />
+                {/* <CircularSlider
+                    min={0}
+                    max={10}
+                    direction={-1}
+                    knobPosition="right"
+                    appendToValue="°"
+                    valueFontSize="4rem"
+                /> */}
                 {/* <CircularInput value={loopCount} onChange={setLoopCount}>
                     <CircularTrack />
                     <CircularProgress />
                     <CircularThumb />
+                </CircularInput> */}
+                
+                {/* <CircularInput radius={50} value={(loopCount + 1) / totalComment} onChange={(value) => setLoopCount(stepValue(value))}>
+                    <CircularTrack strokeWidth={5} stroke="#eee" />
+                    <CircularProgress stroke={`rgb(0, 0, 0)`} />
                 </CircularInput> */}
             </div>
         </div>

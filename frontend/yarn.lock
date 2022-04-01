@@ -1374,6 +1374,11 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@fseehawer/react-circular-slider@^2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@fseehawer/react-circular-slider/-/react-circular-slider-2.4.0.tgz#8c3e2965d21e572e7bb37be36bddae3bc399897a"
+  integrity sha512-bq167q6FmVpeUrQZYLFB9goFfTOlTsEbxLdml8jumjSga/t+EGtp6M+FhoZhl862relitsXOdHUyQQf/jvVanA==
+
 "@graphql-typed-document-node/core@^3.0.0":
   version "3.1.1"
   resolved "https://registry.npmjs.org/@graphql-typed-document-node/core/-/core-3.1.1.tgz"
