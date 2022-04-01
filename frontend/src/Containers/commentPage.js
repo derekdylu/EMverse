@@ -190,7 +190,7 @@ export default function CommentPage() {
             <div className="test">
                 <p id="box" style={{color: "transparent"}}>{currentComment}</p>
             </div>
-            {frameCount}
+            {/* {frameCount} */}
             {/* {loopCount} */}
             <div className="donut">
                 <Donut
