@@ -10,7 +10,7 @@ const Theme = createTheme({
                 borderRadius: 5,
                 fontWeight: "bold",
                 fontSize: "16pt",
-                marginBottom: "5px",
+                marginBottom: "15px",
                 "&:hover": {
                     color: "#fff",
                     backgroundColor: "#FFCB4C",

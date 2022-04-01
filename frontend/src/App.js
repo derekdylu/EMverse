@@ -4,6 +4,7 @@ import InputPage from './Containers/inputPage';
 import Home from './Containers/Home';
 import CommentPage from './Containers/commentPage';
 import Menu from './Components/Menu';
+import Error from './Containers/Error';
 
 function App() {
 	return (
@@ -14,6 +15,7 @@ function App() {
 					<Route path="/input" element={<InputPage />} />
 					<Route path="/menu" element={<Menu />} />
 					<Route path="/:_emotion" element={<CommentPage />} />
+					<Route path="*" element={<Error />} />
 				</Routes>
 			</div>
 		</Router>

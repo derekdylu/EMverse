@@ -1,4 +1,5 @@
-import { React, useRef, useState, useEffect, } from 'react'
+import { React, useRef, useState, useEffect, useCallback, } from 'react'
+import { useNavigate } from 'react-router-dom';
 import Sketch from 'react-p5'
 import { Mouse, Engine, Render, Bodies, World, Runner, MouseConstraint, Body, } from 'matter-js';
 const emotionsList = "haha-angry-sad-wow-fear-disgust".split("-");
@@ -13,27 +14,32 @@ const emotionsList = "haha-angry-sad-wow-fear-disgust".split("-");
 // BUG: assets
 
 const Jar = ({ emotionsCount }) => {
-    const [menu, setMenu] = useState(false);
+    const [transition, setTransition] = useState(false);
+    // to start transition
 
-    const handleMenu = () => {
-        // console.log("handlemenu");
-        setMenu(true);
-    }
+    const navigate = useNavigate();
+    const handleMenu = useCallback(() => navigate('/menu', {replace: true}), [navigate]);
+    const handleHaha = useCallback(() => navigate('/HAHA', {replace: true}), [navigate]);
+    const handleAngry = useCallback(() => navigate('/ANGRY', {replace: true}), [navigate]);
+    const handleSad = useCallback(() => navigate('/SAD', {replace: true}), [navigate]);
+    const handleWow = useCallback(() => navigate('/WOW', {replace: true}), [navigate]);
+    const handleFear = useCallback(() => navigate('/FEAR', {replace: true}), [navigate]);
+    const handleDisgust = useCallback(() => navigate('/DISGUST', {replace: true}), [navigate]);
 
     let counts = [];
     let minIdx = -1;
+    let min;
     if(emotionsCount !== undefined){
         counts = emotionsCount.emotionsCount;
-        console.log(counts);
+        // console.log(counts);
 
-        let min;
         for (let i = 0; i < counts.length; i++){
             if (min === undefined || counts[i] < min){
                 min = counts[i];
                 minIdx = i;
             }
         }
-        console.log(emotionsList[minIdx]);
+        // console.log(emotionsList[minIdx]);
     }
 
     const scene = useRef();
@@ -42,13 +48,17 @@ const Jar = ({ emotionsCount }) => {
     const circles = [];
     const walls = [];
 
-    let haha, sad, angry, disgust, fear, wow;
+    let haha, sad, angry, disgust, fear, wow, logo;
     let { innerWidth: cw, innerHeight: ch } = window;
 
     let cnv;
     let mx, my;
     let sec = 0;
-    let openMenu;
+
+    const handleRefresh = () => {
+        console.log("handleRefresh");
+        window.location.reload();
+    }
     
     useEffect (() => {
         
@@ -117,13 +127,18 @@ const Jar = ({ emotionsCount }) => {
         p5.background(100);
         cnv.mouseClicked(mouseHasClicked);
 
-        haha = p5.createImg("../haha.gif");
-        angry = p5.createImg("../angry.gif");
-        sad = p5.createImg("../sad.gif");
-        wow = p5.createImg("../wow.gif");
-        fear = p5.createImg("../fear.gif");
-        disgust = p5.createImg("../disgust.gif");
+        haha = p5.createImg("haha.gif");
+        angry = p5.createImg("angry.gif");
+        sad = p5.createImg("sad.gif");
+        wow = p5.createImg("wow.gif");
+        fear = p5.createImg("fear.gif");
+        disgust = p5.createImg("disgust.gif");
 
+        logo = p5.createImg("logo_tmp.png");
+        logo.position(0.0217*cw, 0.05*ch);
+        logo.size(50, 50);
+
+        logo.mouseClicked(handleRefresh)
     }
     
     const generateCircle = (emotion, sz, ww, wh) => {
@@ -132,7 +147,7 @@ const Jar = ({ emotionsCount }) => {
         cir.sz = sz;
         cir.clicked = false;
         circles.push(cir);
-        console.log(cir);
+        // console.log(cir);
     }
       
     const draw = (p5) => {
@@ -152,11 +167,15 @@ const Jar = ({ emotionsCount }) => {
         }
 
         // call breath animation
+        if (circles[minIdx].circleRadius <= circles[minIdx].sz * 0.9) { 
+            console.log("reset"); 
+            Body.scale(circles[minIdx], 1/0.9, 1/0.9); 
+        }
         sec === 60 ? sec = 0 : sec++;
         if (sec < 30){
-            Body.scale(circles[minIdx], 1.004, 1.004);
+            Body.scale(circles[minIdx], 1.00401617, 1.00401617);
         } else {
-            Body.scale(circles[minIdx], 0.996, 0.996);
+            Body.scale(circles[minIdx], 0.9959999, 0.9959999);
         }
         
 
@@ -235,22 +254,35 @@ const Jar = ({ emotionsCount }) => {
             p5.rect(0.2678*cw, -0.1369*ch, 0.6755*cw, 2*0.1369*ch, 50);
             p5.rect(0.9646*cw, -0.3760*ch, 2*0.0347*cw, 2*0.3760*ch, 50);
             p5.fill("#ffffff");
-            openMenu = p5.rect(0.0245*cw, 0.8827*ch, 0.1853*cw, 0.0662*ch, 50);
+            p5.rect(0.0245*cw, 0.8827*ch, 0.1853*cw, 0.0662*ch, 50);
+            p5.fill("#523915");
+            p5.textSize(24);
+            p5.text('選單', 0.102*cw, 0.9267*ch);
+            // menu rect
 
             p5.stroke("#FFCB4C");
-            p5.line(0.0217*cw, 0.5122*ch, 0.0217*cw, 0.7857*ch);
+            p5.line(0.0217*cw, 0.5122*ch, 0.0217*cw, 0.7857*ch-53);
 
             p5.noStroke();
             p5.fill("#523915")
             p5.textSize(20);
-            p5.text('Today\'s Topic', 0.0217*cw - 5, 0.5122*ch - 20);
+            p5.text('今日主題', 0.0217*cw - 5, 0.5122*ch - 20);
             p5.fill("#FFB500")
-            p5.text('Double click to see comments', 0.5301*cw, 0.2023*ch);
+            // p5.text('雙擊進入泡泡', 0.5645*cw, 0.2023*ch);
             p5.fill("#523915")
             p5.textSize(36);
-            p5.text('Lorem ipsum dolor sit amet, consectetur adipiscing elit?', 0.0217*cw + 15, 0.5122*ch-10, 0.2118*cw);
+            p5.text('在餐桌上最想跟家人說\n的一句話是什麼?\n為什麼?', 0.0217*cw + 18, 0.5122*ch+5, 0.2118*cw);
 
         p5.pop();
+
+        // if (transition){
+        //     p5.push();
+        //         p5.fill("#FFCB4C");
+        //         p5.rect(0, 0, 0.3*cw, ch);
+        //         p5.rect(0.3*cw, 0, 0.5*cw, ch);
+        //         p5.rect(0.7*cw, 0, 0.3*cw, ch);
+        //     p5.pop();
+        // }
     }
 
     const emotionColor = (emotion) => {
@@ -271,7 +303,7 @@ const Jar = ({ emotionsCount }) => {
     }
 
     const clearClicked = (ele) => {
-        console.log("clear all")
+        // console.log("clear all")
         if (ele){
             ele.clicked = false;
         } else {
@@ -282,12 +314,20 @@ const Jar = ({ emotionsCount }) => {
     }
 
     const clearClickedTimer = async (ele) => {
-        console.log("timer start");
+        // console.log("timer start");
         setTimeout(clearClicked(ele), 5000);
     }
 
     const mouseHasClicked = () => {
+        // console.log(mx, my);
+
         let outsideClicked = true;
+
+        // 0.0245*cw, 0.8827*ch, 0.1853*cw, 0.0662*ch
+        if (mx - 0.0245*cw <= 0.1853*cw && mx - 0.0245*cw > 0 && my - 0.8827*ch <= 0.0662*ch && my - 0.8827*ch > 0){
+            // console.log("menu")
+            handleMenu();
+        }
 
         // if (Math.hypot(mx - ele.position.x, my - ele.position.y) < ele.circleRadius)
 
@@ -297,6 +337,26 @@ const Jar = ({ emotionsCount }) => {
                 // clearClickedTimer(ele);
                 if (ele.clicked === true){
                     console.log(ele.emotion, " double clicked!")
+                    switch (ele.emotion){
+                        case 'haha':
+                            handleHaha();
+                            break;
+                        case 'angry':
+                            handleAngry();
+                            break;
+                        case 'sad':
+                            handleSad();
+                            break;
+                        case 'wow':
+                            handleWow();
+                            break;
+                        case 'fear':
+                            handleFear();
+                            break;
+                        case 'disgust':
+                            handleDisgust();
+                            break;
+                    }
                 }else{
                     console.log(ele.emotion, " clicked")
                     clearClicked()
@@ -310,7 +370,11 @@ const Jar = ({ emotionsCount }) => {
         }
     }
       
-    return <Sketch setup={setup} draw={draw} />
+    return(
+        <>
+            <Sketch setup={setup} draw={draw} />
+        </>
+    )
 }
 
 export default Jar

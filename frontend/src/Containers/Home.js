@@ -1,6 +1,5 @@
 import { React, useRef, useState, useEffect } from 'react'
 import Jar from '../Components/Jar'
-import Menu from '../Components/Menu'
 
 import { EMOTIONS_COUNT } from '../graphql';
 import { useQuery, useLazyQuery } from "@apollo/client";
@@ -15,8 +14,12 @@ const Home = () => {
 
     return (
         <>
-            {/* <Menu /> */}
-            {(loading) ? (<p>loading</p>) : (
+            {(loading) ? (
+                <div>
+                    <p>loading</p>
+                    <button onClick={() => window.location.reload()}>reload</button>
+                </div>
+                ) : (
                 <div>
                     <Jar emotionsCount={data} />
                 </div>
