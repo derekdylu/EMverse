@@ -1,67 +1,66 @@
 .fullPage {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    overflow: hidden;
-    text-align: center;
-    background-color: #FB5544;
-    display:flex;
-    /* flex-direction: row; */
-    /* justify-content: center; */
-    /* align-items: center */
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  overflow: hidden;
+  text-align: center;
+  background-color: #fb5544;
+  display: flex;
+  /* flex-direction: row; */
+  /* justify-content: center; */
+  /* align-items: center */
 }
 
 .donut {
-    /* display:flex;
+  /* display:flex;
     flex-direction: row;
     justify-content: center;
     align-items: center; */
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, 0%);
-    bottom: 10px;
-
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  bottom: 10px;
 }
 
 .test {
-    position: absolute; 
-    left: 0; 
-    right: 0;
-    top: 38%;
-    margin-left: auto; 
-    margin-right: auto; 
-    width: 12%;
-    height: 20%; 
-    text-align: center;
-    /* background-color: white; */
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 38%;
+  margin-left: auto;
+  margin-right: auto;
+  width: 20%;
+  height: 20%;
+  text-align: center;
+  font-size: 36px;
+  /* background-color: white; */
 }
 
 .test p {
-    line-height: 1.5;
-    display: inline-block;
-    vertical-align: middle;
+  line-height: 1.5;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .home_button {
-    position: absolute;
-    background-color: #ffffff;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    width: 30px;
-    height: 30px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
-    left: 30px;
-    bottom: 30px;
+  position: absolute;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
+  left: 30px;
+  bottom: 30px;
 }
 
 .home_button:hover {
-    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.5);
-
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.5);
 }
 
 .home_button img {
-    position: center;
-    height: 70%;
-    width: 100%;
+  position: center;
+  height: 70%;
+  width: 100%;
 }

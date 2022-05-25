@@ -136,15 +136,15 @@ export default function CommentPage() {
         }
 
         if (speed === 1) {
-            if (frameCount === 50 || frameCount === 325) {
+            if (frameCount === 15 || frameCount === 90) {
                 box.style.color = "white";
                 setCurrentComment(posts.postsByEmotion[loopCount].text)
                 // setCurrentComment(comments[loopCount]);
             }
-            if (frameCount === 210 || frameCount === 485) {
+            if (frameCount === 65 || frameCount === 140) {
                 box.style.color = "transparent";
             }
-            if (frameCount === 260) {
+            if (frameCount === 80) {
                 setLoopCount((loopCount + 1) % (totalComment));
             }
         }
@@ -229,7 +229,7 @@ export default function CommentPage() {
                     <CircularProgress stroke={`rgb(0, 0, 0)`} />
                 </CircularInput> */}
             </div>
-            <Link to="/">
+            <Link to="/home">
 				<button class="home_button"><img src={homeButton} alt="H" /></button>
 			</Link>
         </div>
