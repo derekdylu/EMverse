@@ -1,9 +1,7 @@
-const Post = 
-{
-    id (parent, args, { db }, info)
-    {
-        return db.Post.findById(id);
-    }
+const Post = {
+  id(parent) {
+    return parent.id || parent._id?.toString();
+  },
 };
 
-export default Post
+export default Post;

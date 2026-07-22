@@ -1,3 +1,3 @@
-import Post from './Models/post';
+import Post from './Models/post.js';
 
 export { Post };

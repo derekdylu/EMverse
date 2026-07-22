@@ -1,25 +1,22 @@
-const emotionsList = "HAHA-ANGRY-SAD-WOW-FEAR-DISGUST".split("-");
+const emotionsList = ['HAHA', 'ANGRY', 'SAD', 'WOW', 'FEAR', 'DISGUST'];
 
 const Query = {
-    async postsByEmotion (parent, { emotion }, { db, pubsub }, info)
-    {
-        const posts = await db.Post.find({ emotion: emotion });
-        return posts;
-    },
-    async emotionsCount (parent, {}, {db, pubsub}, info)
-    {
-        let count = [];
-        for(let i = 0; i < emotionsList.length; i++){
-            let posts = await db.Post.find({ emotion: emotionsList[i] });
-            if(posts === null){
-                count.push(0);
-                continue;
-            }
-            count.push(posts.length);
-        }
+  postsByEmotion(parent, { emotion }, { db }) {
+    return db.Post.find({
+      emotion,
+      is_visible: true,
+    })
+      .sort({ created_at: -1 })
+      .limit(100);
+  },
 
-        return count;
-    },
+  emotionsCount(parent, args, { db }) {
+    return Promise.all(
+      emotionsList.map((emotion) =>
+        db.Post.countDocuments({ emotion, is_visible: true }),
+      ),
+    );
+  },
 };
 
-export default Query
+export default Query;

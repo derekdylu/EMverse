@@ -1,42 +1,53 @@
+import { GraphQLError } from 'graphql';
+import { requireAdmin } from '../auth.js';
+
+const MAX_POST_LENGTH = 500;
+
+function invalidPost(message) {
+  return new GraphQLError(message, {
+    extensions: { code: 'BAD_USER_INPUT' },
+  });
+}
+
 const Mutation = {
-    async createPost(parent, { emotion, text }, { db, pubsub }, info)
-    {
-        const post = new db.Post({
-            created_at: Date.now(),
-            emotion: emotion,
-            text: text,
-            is_visible: true,
-        }).save();
+  async createPost(parent, { emotion, text }, { db, pubSub }) {
+    const normalizedText = typeof text === 'string' ? text.trim() : '';
 
-        // subscription
-        pubsub.publish(`POST MUTATION FROM ${emotion}`, 
-            {
-                postSubscription: { mutation: 'CREATED', post: post },
-            });
+    if (!normalizedText) {
+      throw invalidPost('Post text cannot be empty.');
+    }
+    if (normalizedText.length > MAX_POST_LENGTH) {
+      throw invalidPost(`Post text cannot exceed ${MAX_POST_LENGTH} characters.`);
+    }
 
-        return post;
-    },
-    async updatePost(parent, { id }, { db, pubsub }, info)
-    {
-        try 
-        {
-            const post = await db.Post.findOne({ _id: id });
-            if (post.is_visible){
-                post.is_visible = false;
-            }else{
-                post.is_visible = true;
-            }
-            await db.Post.findOneAndUpdate({ _id: id }, post);
-        }
-        catch(e)
-        {
-            console.log(e);
-        }
+    const post = await db.Post.create({
+      emotion,
+      text: normalizedText,
+      is_visible: true,
+    });
 
-        // subscription
+    pubSub.publish(`post:${emotion}`, {
+      mutation: 'CREATED',
+      post,
+    });
 
-        return id;
-    },
+    return post;
+  },
+
+  async updatePost(parent, { id }, { adminToken, db, request }) {
+    requireAdmin(request, adminToken);
+
+    const post = await db.Post.findById(id);
+    if (!post) {
+      throw new GraphQLError('Post not found.', {
+        extensions: { code: 'NOT_FOUND' },
+      });
+    }
+
+    post.is_visible = !post.is_visible;
+    await post.save();
+    return id;
+  },
 };
 
-export default Mutation
+export default Mutation;

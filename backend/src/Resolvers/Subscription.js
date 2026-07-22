@@ -1,13 +1,12 @@
-const Subscription = 
-{
-    postSubscription:
-    {
-        subscribe (parent, { emotion }, { db, pubsub }, info)
-        {
-            return pubsub.asyncIterator(`POST MUTATION FROM ${emotion}`);
-        },
+const Subscription = {
+  postSubscription: {
+    subscribe(parent, { emotion }, { pubSub }) {
+      return pubSub.subscribe(`post:${emotion}`);
     },
-    // TODO: add subscription of emotions count
+    resolve(payload) {
+      return payload;
+    },
+  },
 };
 
-export default Subscription
+export default Subscription;

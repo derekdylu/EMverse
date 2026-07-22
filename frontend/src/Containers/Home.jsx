@@ -1,8 +1,8 @@
-import { React, useRef, useState, useEffect } from 'react'
+import { React, useEffect } from 'react'
 import Jar from '../Components/Jar'
 
 import { EMOTIONS_COUNT } from '../graphql';
-import { useQuery, useLazyQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 
 const Home = () => {
     // const {loading, error, data} = useQuery(EMOTIONS_COUNT);
@@ -14,12 +14,16 @@ const Home = () => {
 
     return (
         <>
-            {(loading) ? (
+            {error ? (
+                <div role="alert">
+                    <p>Unable to load emotions.</p>
+                    <button onClick={() => getCounts()}>retry</button>
+                </div>
+            ) : loading || !data ? (
                 <div>
                     <p>loading</p>
-                    <button onClick={() => window.location.reload()}>reload</button>
                 </div>
-                ) : (
+            ) : (
                 <div>
                     <Jar emotionsCount={data} />
                 </div>

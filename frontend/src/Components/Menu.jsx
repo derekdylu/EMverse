@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom';
 import {Box, Grid, Button} from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
@@ -23,7 +23,7 @@ const Menu = (menu) => {
                             backgroundColor: "#fff",
                         }}
                     >
-                        <img src="/logo_tmp.png" style={{maxWidth: '50px', marginLeft: '25px', marginTop: '50px'}}></img>
+                        <img src="/logo_tmp.png" alt="em-verse" style={{maxWidth: '50px', marginLeft: '25px', marginTop: '50px'}} />
                         <Grid
                             container
                             direction="column"

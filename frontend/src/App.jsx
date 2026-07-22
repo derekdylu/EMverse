@@ -11,6 +11,7 @@ function App() {
 		<Router>
 			<div>
 				<Routes>
+					<Route path="/" element={<Home />} />
 					<Route path="/home" element={<Home />} />
 					<Route path="/input" element={<InputPage />} />
 					<Route path="/menu" element={<Menu />} />

@@ -1,6 +1,6 @@
-import { React, useRef, useState, useEffect, useCallback, } from 'react'
+import { React, useRef, useEffect, useCallback, } from 'react'
 import { useNavigate } from 'react-router-dom';
-import Sketch from 'react-p5'
+import P5Sketch from './P5Sketch';
 import { Mouse, Engine, Render, Bodies, World, Runner, MouseConstraint, Body, } from 'matter-js';
 const emotionsList = "haha-angry-sad-wow-fear-disgust".split("-");
 
@@ -14,9 +14,6 @@ const emotionsList = "haha-angry-sad-wow-fear-disgust".split("-");
 // BUG: assets
 
 const Jar = ({ emotionsCount }) => {
-    const [transition, setTransition] = useState(false);
-    // to start transition
-
     const navigate = useNavigate();
     const handleMenu = useCallback(() => navigate('/menu', {replace: true}), [navigate]);
     const handleHaha = useCallback(() => navigate('/HAHA', {replace: true}), [navigate]);
@@ -26,20 +23,14 @@ const Jar = ({ emotionsCount }) => {
     const handleFear = useCallback(() => navigate('/FEAR', {replace: true}), [navigate]);
     const handleDisgust = useCallback(() => navigate('/DISGUST', {replace: true}), [navigate]);
 
-    let counts = [];
-    let minIdx = -1;
+    const counts = emotionsCount?.emotionsCount || [0, 0, 0, 0, 0, 0];
+    let minIdx = 0;
     let min;
-    if(emotionsCount !== undefined){
-        counts = emotionsCount.emotionsCount;
-        // console.log(counts);
-
-        for (let i = 0; i < counts.length; i++){
-            if (min === undefined || counts[i] < min){
-                min = counts[i];
-                minIdx = i;
-            }
+    for (let i = 0; i < counts.length; i++){
+        if (min === undefined || counts[i] < min){
+            min = counts[i];
+            minIdx = i;
         }
-        // console.log(emotionsList[minIdx]);
     }
 
     const scene = useRef();
@@ -74,7 +65,7 @@ const Jar = ({ emotionsCount }) => {
         });
 
         // mouse constraint
-        const mouse = Mouse.create(render.canvas.elt);
+        const mouse = Mouse.create(render.canvas);
         const options = {
             mouse: mouse,
         };
@@ -104,12 +95,13 @@ const Jar = ({ emotionsCount }) => {
         // generate circles
         const sumCounts = counts.reduce(
             (a, b) => a + b, 0
-        );
+        ) || counts.length;
         
         const scale = 600 * ((cw-1440)/1440+1);
 
         for (let i = 0; i < 6; i++) {
-            generateCircle(emotionsList[i], (counts[i] === 0) ? 1 : (counts[i] / sumCounts * scale), cw*2/3, ch/2);
+            const radius = counts[i] === 0 ? 20 : Math.max(20, counts[i] / sumCounts * scale);
+            generateCircle(emotionsList[i], radius, cw*2/3, ch/2);
         }
 
         World.add(engine.current.world, circles);
@@ -167,15 +159,16 @@ const Jar = ({ emotionsCount }) => {
         }
 
         // call breath animation
-        if (circles[minIdx].circleRadius <= circles[minIdx].sz * 0.9) { 
-            console.log("reset"); 
-            Body.scale(circles[minIdx], 1/0.9, 1/0.9); 
-        }
-        sec === 60 ? sec = 0 : sec++;
-        if (sec < 30){
-            Body.scale(circles[minIdx], 1.00401617, 1.00401617);
-        } else {
-            Body.scale(circles[minIdx], 0.9959999, 0.9959999);
+        if (circles[minIdx]) {
+            if (circles[minIdx].circleRadius <= circles[minIdx].sz * 0.9) {
+                Body.scale(circles[minIdx], 1/0.9, 1/0.9);
+            }
+            sec === 60 ? sec = 0 : sec++;
+            if (sec < 30){
+                Body.scale(circles[minIdx], 1.00401617, 1.00401617);
+            } else {
+                Body.scale(circles[minIdx], 0.9959999, 0.9959999);
+            }
         }
         
 
@@ -372,7 +365,8 @@ const Jar = ({ emotionsCount }) => {
       
     return(
         <>
-            <Sketch setup={setup} draw={draw} />
+            <div ref={scene} style={{ display: 'none' }} aria-hidden="true" />
+            <P5Sketch setup={setup} draw={draw} />
         </>
     )
 }

@@ -1,18 +1,13 @@
-// Set mongo connection
 import mongoose from 'mongoose';
-import dotenv from "dotenv-defaults";
 
-export default function connectDB()
-{
-    dotenv.config();
-
-    mongoose
-    .connect(
-        process.env.MONGO_URL, {
-            useNewUrlParser: true, 
-            useUnifiedTopology: true 
-        }
-    )
-    .then((res) => console.log("mongo db connected."))
-    .catch((err) => console.log("mongo db failed to connect: " + err))
+export default async function connectDB(mongoUrl) {
+  try {
+    await mongoose.connect(mongoUrl, {
+      serverSelectionTimeoutMS: 5_000,
+    });
+    console.info('MongoDB connected.');
+  } catch {
+    console.error('MongoDB connection failed. Check MONGO_URL and server access.');
+    throw new Error('Unable to connect to MongoDB.');
+  }
 }

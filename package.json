@@ -1,14 +1,23 @@
 {
   "name": "em-verse",
   "version": "1.0.0",
-  "main": "index.js",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "packageManager": "yarn@1.22.22",
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
   "repository": "https://github.com/derekdylu/em-verse.git",
-  "author": "derekdylu <derekdylu@gmail.com>",
-  "license": "MIT"
-  ,
+  "author": "derekdylu",
+  "license": "MIT",
   "scripts": {
-    "install": "cd frontend && yarn install && cd ../backend && yarn install",
-    "frontend": "cd frontend && yarn start",
-    "server": "cd backend && yarn server"
+    "frontend": "yarn workspace @em-verse/frontend dev",
+    "server": "yarn workspace @em-verse/backend dev",
+    "build": "yarn workspace @em-verse/frontend build",
+    "test": "yarn workspace @em-verse/backend test && yarn workspace @em-verse/frontend test --run",
+    "audit": "yarn audit --groups dependencies"
   }
 }

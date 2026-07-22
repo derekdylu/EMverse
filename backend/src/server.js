@@ -1,33 +1,22 @@
-import { GraphQLServer, PubSub } from 'graphql-yoga';
-import connectDB from './mongo';
-import * as db from './db';
+import { createServer } from 'node:http';
+import { createApplication } from './app.js';
+import { config } from './config.js';
+import * as db from './db.js';
+import connectDB from './mongo.js';
 
-import Query from './Resolvers/Query';
-import Mutation from './Resolvers/Mutation';
-// import Subscription from './resolvers/Subscription';
-import Post from './Resolvers/Post';
-import EmotionResolver from "./Resolvers/Emotion";
+await connectDB(config.mongoUrl);
 
-connectDB();
-
-const pubsub = new PubSub();
-
-const server = new GraphQLServer({
-    typeDefs: './src/schema.graphql',
-    resolvers: { 
-        Query,
-        Mutation,
-        // Subscription,
-        Post,
-        Emotion: EmotionResolver,
-    },
-    cors: {
-        origin: '*',
-        credentials: true,
-    },
-    context: { db, pubsub },
+const yoga = createApplication({
+  adminToken: config.adminToken,
+  corsOrigins: config.frontendOrigins,
+  database: db,
+  isProduction: config.nodeEnv === 'production',
 });
 
-server.start({ port: process.env.PORT | 5000 }, () => {
-    console.log(`The server is up on port ${process.env.PORT | 5000}!`);
+const server = createServer(yoga);
+
+server.listen(config.port, config.host, () => {
+  console.info(
+    `GraphQL API listening on http://${config.host}:${config.port}/graphql`,
+  );
 });
