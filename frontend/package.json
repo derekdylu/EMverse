@@ -21,7 +21,7 @@
     "react-router-dom": "6.30.4"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "5.17.0",
+    "@testing-library/jest-dom": "6.9.1",
     "@testing-library/react": "12.1.5",
     "@types/react": "17.0.93",
     "@vitejs/plugin-react": "6.0.4",
