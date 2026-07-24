@@ -1,5 +1,7 @@
 # em-verse
 
+<img width="1946" height="1117" alt="MacBook Pro 16_ - 17" src="https://github.com/user-attachments/assets/72503096-cb35-4d0b-bd0a-beffe4ce72de" />
+
 em-verse is an experimental full-stack emotion-sharing wall. Visitors can post a short message, associate it with one of six emotions, and explore the visible messages through an animated React interface.
 
 The interface is primarily written in Traditional Chinese.
