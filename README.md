@@ -1,4 +1,4 @@
-# em-verse
+# EMverse
 
 <img width="1946" height="1117" alt="MacBook Pro 16_ - 17" src="https://github.com/user-attachments/assets/72503096-cb35-4d0b-bd0a-beffe4ce72de" />
 
