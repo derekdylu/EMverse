@@ -2,9 +2,6 @@
 
 em-verse is an experimental full-stack emotion-sharing wall. Visitors can post a short message, associate it with one of six emotions, and explore the visible messages through an animated React interface.
 
-> [!IMPORTANT]
-> This repository is a restored 2022 prototype. It is suitable for local development and learning, but it is not a production-ready anonymous social platform. A public deployment still needs durable rate limiting, abuse reporting, operational monitoring, database backups, and a reviewed privacy policy.
-
 The interface is primarily written in Traditional Chinese.
 
 ## Features
@@ -68,8 +65,6 @@ Backend settings are loaded from `backend/.env`; safe local fallbacks live in `b
 
 The frontend reads `VITE_GRAPHQL_URL` at build time and otherwise uses `http://127.0.0.1:5000/graphql`.
 
-Never commit `backend/.env`, administrator tokens, or remote database credentials. If a credential is committed, revoke it before removing it from Git history.
-
 ## Development
 
 Run the automated checks:
@@ -92,10 +87,6 @@ frontend/  Vite-powered React client and browser tests
 The API binds to loopback by default. Changing `HOST` to a public interface is an explicit deployment decision. Before doing so, add infrastructure-level request rate limiting, TLS, logging with sensitive-data filtering, database least-privilege controls, backup and restore procedures, abuse moderation, and a deployment-specific CORS allowlist.
 
 Do not put `ADMIN_TOKEN` in the frontend or any `VITE_` variable: Vite embeds those values in public browser assets.
-
-## Contributing and security
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the development workflow. Report security concerns according to [SECURITY.md](SECURITY.md), not in a public issue.
 
 ## License
 
