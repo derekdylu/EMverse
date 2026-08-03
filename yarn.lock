@@ -1860,10 +1860,10 @@ mongodb@~7.5:
     bson "^7.2.0"
     mongodb-connection-string-url "^7.0.1"
 
-mongoose@9.8.0:
-  version "9.8.0"
-  resolved "https://registry.npmjs.org/mongoose/-/mongoose-9.8.0.tgz#c8e6c217a82284042a01fb1880273edc84571e80"
-  integrity sha512-PDGx3XACxrBQyWf4YT+5s1Xsx19x84UWGlRVIza4i9RG6qKjGcoG7odotT6uquR6YoaDMTZ6ZZc/jMXLrNPyyA==
+mongoose@9.9.0:
+  version "9.9.0"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-9.9.0.tgz#75fa7d7d20caa09fca3638fc5356d01b06770e0d"
+  integrity sha512-xtBH8CU5oRK16F14rC8/KlRHeuPGP+w/URjDdwHV0oyN7otVuqglLje1FePX9+SaSBGj0/QiM65Tg86R7iNbPg==
   dependencies:
     "@standard-schema/spec" "^1.1.0"
     kareem "3.3.0"
@@ -1948,10 +1948,10 @@ optimism@^0.18.0:
     "@wry/trie" "^0.5.0"
     tslib "^2.3.0"
 
-p5@2.3.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/p5/-/p5-2.3.1.tgz#416e6bf67421361b4827ba2a0038a002ce8bef24"
-  integrity sha512-YOzt3oP+xagNKtCiOfXK6EaEi4i7F4+5MNGFPUu6/yEJ1QhIsZQl1Tp/uYFNldi3Y0Uwmre997Ke0vDoFwBFBw==
+p5@2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/p5/-/p5-2.3.2.tgz#f355e5823d1212df89da89a5db42145701bf8418"
+  integrity sha512-DlX4rVQb9R2Z16XtTTNN/1zf7FZWy55ApA6ZS0GNJBDraymJcd9kbxmpIDKYnVxiXrchgb2YckWsmm+TSEJVPg==
   dependencies:
     "@davepagurek/bezier-path" "^0.0.7"
     "@japont/unicode-range" "^1.0.0"
